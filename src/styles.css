@@ -100,15 +100,15 @@
   --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.9 0.24 128 / 45%);
 
-  --gradient-brand: linear-gradient(135deg, #A6FF00 0%, #00E5FF 50%, #3B82F6 100%);
-  --gradient-logo: linear-gradient(135deg, #A6FF00 0%, #00F2FE 55%, #38BDF8 100%);
-  --gradient-gold: linear-gradient(135deg, #FFFFFF 0%, #A6FF00 50%, #00E5FF 100%);
+  --gradient-brand: linear-gradient(135deg, #A6FF00 0%, #4E9F3D 50%, #2D5A27 100%);
+  --gradient-logo: linear-gradient(135deg, #A6FF00 0%, #386641 100%);
+  --gradient-gold: linear-gradient(135deg, #FFFFFF 0%, #A6FF00 40%, #2D5A27 100%);
   --gradient-surface: linear-gradient(
     160deg,
     oklch(1 0 0 / 6%),
     oklch(1 0 0 / 1.5%)
   );
-  --shadow-glow: 0 0 60px -12px rgba(0, 229, 255, 0.35);
+  --shadow-glow: 0 0 60px -12px rgba(166, 255, 0, 0.35);
   --shadow-elevated: 0 24px 60px -24px oklch(0 0 0 / 85%);
 }
 
@@ -147,14 +147,14 @@
 }
 
 @utility text-gradient {
-  background-image: linear-gradient(135deg, #A6FF00 0%, #00E5FF 50%, #3B82F6 100%);
+  background-image: linear-gradient(135deg, #A6FF00 0%, #55A630 50%, #2D5A27 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 @utility text-gradient-gold {
-  background-image: linear-gradient(135deg, #FFFFFF 0%, #A6FF00 50%, #00E5FF 100%);
+  background-image: linear-gradient(135deg, #FFFFFF 0%, #A6FF00 50%, #2D5A27 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

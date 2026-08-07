@@ -3,9 +3,9 @@ export function W7Logo({ className, showTagline = false }: { className?: string;
     <span className={`inline-flex items-center gap-2.5 ${className ?? ""}`}>
       <span
         aria-hidden
-        className="relative grid size-9 place-items-center rounded-xl p-[1.5px] shadow-[0_0_20px_-4px_rgba(0,229,255,0.45)] transition-transform duration-300 hover:scale-105"
+        className="relative grid size-9 place-items-center rounded-xl p-[1.5px] shadow-[0_0_20px_-4px_rgba(166,255,0,0.45)] transition-transform duration-300 hover:scale-105"
         style={{
-          background: "linear-gradient(135deg, #A6FF00 0%, #00E5FF 50%, #3B82F6 100%)",
+          background: "linear-gradient(135deg, #A6FF00 0%, #4E9F3D 50%, #2D5A27 100%)",
         }}
       >
         <span className="flex size-full items-center justify-center rounded-[10px] bg-[#0A0C10] font-black text-xs text-gradient tracking-tighter">
