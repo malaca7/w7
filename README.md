@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# w7
 
 This project was built with [Lovable](https://lovable.dev).
 
@@ -15,8 +15,8 @@ Open your project in the [Lovable editor](https://lovable.dev) and keep building
 Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
+git clone https://github.com/malaca7/w7.git
+cd w7
 npm i
 npm run dev
 ```
@@ -27,3 +27,4 @@ npm run dev
 - TypeScript
 - React
 - Tailwind CSS
+
