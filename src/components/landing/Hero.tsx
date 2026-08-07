@@ -27,7 +27,7 @@ export function Hero() {
         >
           <span className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs text-muted-foreground">
             <Sparkles className="size-3.5 text-primary" />
-            Atendimento inteligente multi-empresa no WhatsApp
+            <span className="font-bold text-gradient">W7</span> — Atendimento inteligente multi-empresa no WhatsApp
           </span>
 
           <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
