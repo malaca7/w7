@@ -1,30 +1,29 @@
-# w7
+# W7 — Plataforma SaaS de Atendimento via WhatsApp
 
-This project was built with [Lovable](https://lovable.dev).
+Plataforma SaaS premium multi-empresa para atendimento via WhatsApp com CRM, Chatbot Visual, Campanhas e Gestão Financeira.
 
-## Build with Lovable
+## Recursos Principais
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+- **Multi-empresa (Multi-tenant)**: Isolamento total de dados e permissões por empresa.
+- **Central de Atendimento**: Filas, transferência, etiquetas e histórico completo de mensagens.
+- **Chatbot Visual**: Construtor drag-and-drop de fluxos com condições e fallback.
+- **CRM Integrado**: Ficha do cliente, dados de conversão e histórico de contatos.
+- **Financeiro & Assinaturas**: Gestão de planos, PIX, boleto e cartão.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Desenvolvimento Local
 
 ```sh
 git clone https://github.com/malaca7/w7.git
 cd w7
-npm i
+npm install
 npm run dev
 ```
 
-## Built with
+## Tecnologias Utilizadas
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+- **React 19** + **TypeScript**
+- **TanStack Start & Router**
+- **Tailwind CSS v4**
+- **Vite**
+
 

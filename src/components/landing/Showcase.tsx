@@ -115,7 +115,7 @@ export function Testimonials() {
       <div className="mx-auto max-w-6xl px-5">
         <Reveal className="max-w-2xl">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Times que já operam na W7
+            Times que já operam na <span className="font-bold text-gradient">W7</span>
           </h2>
         </Reveal>
         <div className="mt-10 grid gap-4 md:grid-cols-3">

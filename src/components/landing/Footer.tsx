@@ -21,7 +21,7 @@ export function CTA() {
                 Comece a atender melhor <span className="text-gradient">hoje</span>
               </h2>
               <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-                Crie sua empresa na W7 em menos de dois minutos. Sem cartão, sem instalação.
+                Crie sua empresa na <span className="font-bold text-gradient">W7</span> em menos de dois minutos. Sem cartão, sem instalação.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Button variant="brand" size="xl">
@@ -53,9 +53,9 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-5">
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(4,1fr)]">
           <div>
-            <W7Logo />
+            <W7Logo showTagline />
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              Plataforma SaaS de atendimento inteligente via WhatsApp para empresas que crescem.
+              Plataforma SaaS <span className="font-bold text-gradient">W7</span> de atendimento inteligente via WhatsApp para empresas que crescem.
             </p>
           </div>
           {columns.map((c) => (
@@ -79,7 +79,7 @@ export function Footer() {
           ))}
         </div>
         <p className="mt-12 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} W7. Todos os direitos reservados.
+          © {new Date().getFullYear()} <span className="font-bold text-gradient">W7</span>. Todos os direitos reservados.
         </p>
       </div>
     </footer>
