@@ -9,7 +9,8 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deploy": "npm i && npm run build && git add . && git commit -m \"Deploy to gh-pages\" && git push origin main && git checkout gh-pages && git pull origin gh-pages --no-rebase && git merge main --no-edit && git push origin gh-pages && git checkout main"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
