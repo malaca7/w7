@@ -2,12 +2,12 @@
   <defs>
     <linearGradient id="w7Grad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#A6FF00" />
-      <stop offset="50%" stop-color="#00E5FF" />
-      <stop offset="100%" stop-color="#3B82F6" />
+      <stop offset="50%" stop-color="#4E9F3D" />
+      <stop offset="100%" stop-color="#2D5A27" />
     </linearGradient>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#14151C" />
-      <stop offset="100%" stop-color="#080808" />
+      <stop offset="0%" stop-color="#141814" />
+      <stop offset="100%" stop-color="#080A08" />
     </linearGradient>
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="12" result="blur" />
