@@ -4,17 +4,13 @@
       <stop offset="0%" stop-color="#A6FF00" />
       <stop offset="100%" stop-color="#50C800" />
     </linearGradient>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#121612" />
-      <stop offset="100%" stop-color="#080A08" />
-    </linearGradient>
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feGaussianBlur stdDeviation="12" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
-  <!-- Background with subtle green gradient border -->
-  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" stroke="url(#w7Grad)" stroke-width="12"/>
+  <!-- Background with filled gradient -->
+  <rect width="512" height="512" rx="128" fill="url(#w7Grad)" />
   <g transform="translate(20, 20)">
     <!-- W mark (crisp white) -->
     <path d="M 70 140 L 130 332 L 190 200 L 250 332 L 310 140 H 260 L 225 250 L 190 140 H 170 L 135 250 L 100 140 Z" fill="#FFFFFF" filter="url(#glow)"/>
