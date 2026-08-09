@@ -33,6 +33,7 @@ export async function signUpWithEmail(
     password,
     options: {
       data: { full_name: fullName, company_name: companyName },
+      emailRedirectTo: `${window.location.origin}/auth/login`,
     },
   });
   if (error) throw error;
