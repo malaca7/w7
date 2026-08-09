@@ -13,6 +13,7 @@
     "deploy": "npm i && npm run build && git add . && git commit -m \"Deploy to gh-pages\" && git push origin main && git checkout gh-pages && git pull origin gh-pages --no-rebase && git merge main --no-edit && git push origin gh-pages && git checkout main"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",

@@ -10,33 +10,314 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as AtendimentoRouteImport } from './routes/atendimento'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppAgendamentosRouteImport } from './routes/app/agendamentos'
+import { Route as AppAssinaturaRouteImport } from './routes/app/assinatura'
+import { Route as AppAtendimentoRouteImport } from './routes/app/atendimento'
+import { Route as AppCampanhasRouteImport } from './routes/app/campanhas'
+import { Route as AppChatbotRouteImport } from './routes/app/chatbot'
+import { Route as AppClientesRouteImport } from './routes/app/clientes'
+import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes'
+import { Route as AppConversasRouteImport } from './routes/app/conversas'
+import { Route as AppDepartamentosRouteImport } from './routes/app/departamentos'
+import { Route as AppFinanceiroRouteImport } from './routes/app/financeiro'
+import { Route as AppNotificacoesRouteImport } from './routes/app/notificacoes'
+import { Route as AppPerfilRouteImport } from './routes/app/perfil'
+import { Route as AppRelatoriosRouteImport } from './routes/app/relatorios'
+import { Route as AppUsuariosRouteImport } from './routes/app/usuarios'
+import { Route as AppWhatsappRouteImport } from './routes/app/whatsapp'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtendimentoRoute = AtendimentoRouteImport.update({
+  id: '/atendimento',
+  path: '/atendimento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgendamentosRoute = AppAgendamentosRouteImport.update({
+  id: '/agendamentos',
+  path: '/agendamentos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssinaturaRoute = AppAssinaturaRouteImport.update({
+  id: '/assinatura',
+  path: '/assinatura',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAtendimentoRoute = AppAtendimentoRouteImport.update({
+  id: '/atendimento',
+  path: '/atendimento',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCampanhasRoute = AppCampanhasRouteImport.update({
+  id: '/campanhas',
+  path: '/campanhas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChatbotRoute = AppChatbotRouteImport.update({
+  id: '/chatbot',
+  path: '/chatbot',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientesRoute = AppClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConversasRoute = AppConversasRouteImport.update({
+  id: '/conversas',
+  path: '/conversas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDepartamentosRoute = AppDepartamentosRouteImport.update({
+  id: '/departamentos',
+  path: '/departamentos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificacoesRoute = AppNotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRelatoriosRoute = AppRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUsuariosRoute = AppUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWhatsappRoute = AppWhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => AppRoute,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/atendimento': typeof AtendimentoRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/app/agendamentos': typeof AppAgendamentosRoute
+  '/app/assinatura': typeof AppAssinaturaRoute
+  '/app/atendimento': typeof AppAtendimentoRoute
+  '/app/campanhas': typeof AppCampanhasRoute
+  '/app/chatbot': typeof AppChatbotRoute
+  '/app/clientes': typeof AppClientesRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/conversas': typeof AppConversasRoute
+  '/app/departamentos': typeof AppDepartamentosRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/notificacoes': typeof AppNotificacoesRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/usuarios': typeof AppUsuariosRoute
+  '/app/whatsapp': typeof AppWhatsappRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/atendimento': typeof AtendimentoRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/app/agendamentos': typeof AppAgendamentosRoute
+  '/app/assinatura': typeof AppAssinaturaRoute
+  '/app/atendimento': typeof AppAtendimentoRoute
+  '/app/campanhas': typeof AppCampanhasRoute
+  '/app/chatbot': typeof AppChatbotRoute
+  '/app/clientes': typeof AppClientesRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/conversas': typeof AppConversasRoute
+  '/app/departamentos': typeof AppDepartamentosRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/notificacoes': typeof AppNotificacoesRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/usuarios': typeof AppUsuariosRoute
+  '/app/whatsapp': typeof AppWhatsappRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/atendimento': typeof AtendimentoRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/app/agendamentos': typeof AppAgendamentosRoute
+  '/app/assinatura': typeof AppAssinaturaRoute
+  '/app/atendimento': typeof AppAtendimentoRoute
+  '/app/campanhas': typeof AppCampanhasRoute
+  '/app/chatbot': typeof AppChatbotRoute
+  '/app/clientes': typeof AppClientesRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/conversas': typeof AppConversasRoute
+  '/app/departamentos': typeof AppDepartamentosRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/notificacoes': typeof AppNotificacoesRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/usuarios': typeof AppUsuariosRoute
+  '/app/whatsapp': typeof AppWhatsappRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/atendimento'
+    | '/auth'
+    | '/app/agendamentos'
+    | '/app/assinatura'
+    | '/app/atendimento'
+    | '/app/campanhas'
+    | '/app/chatbot'
+    | '/app/clientes'
+    | '/app/configuracoes'
+    | '/app/conversas'
+    | '/app/departamentos'
+    | '/app/financeiro'
+    | '/app/notificacoes'
+    | '/app/perfil'
+    | '/app/relatorios'
+    | '/app/usuarios'
+    | '/app/whatsapp'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/reset-password'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/atendimento'
+    | '/auth'
+    | '/app/agendamentos'
+    | '/app/assinatura'
+    | '/app/atendimento'
+    | '/app/campanhas'
+    | '/app/chatbot'
+    | '/app/clientes'
+    | '/app/configuracoes'
+    | '/app/conversas'
+    | '/app/departamentos'
+    | '/app/financeiro'
+    | '/app/notificacoes'
+    | '/app/perfil'
+    | '/app/relatorios'
+    | '/app/usuarios'
+    | '/app/whatsapp'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/reset-password'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/atendimento'
+    | '/auth'
+    | '/app/agendamentos'
+    | '/app/assinatura'
+    | '/app/atendimento'
+    | '/app/campanhas'
+    | '/app/chatbot'
+    | '/app/clientes'
+    | '/app/configuracoes'
+    | '/app/conversas'
+    | '/app/departamentos'
+    | '/app/financeiro'
+    | '/app/notificacoes'
+    | '/app/perfil'
+    | '/app/relatorios'
+    | '/app/usuarios'
+    | '/app/whatsapp'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/reset-password'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AtendimentoRoute: typeof AtendimentoRoute
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +329,231 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atendimento': {
+      id: '/atendimento'
+      path: '/atendimento'
+      fullPath: '/atendimento'
+      preLoaderRoute: typeof AtendimentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/agendamentos': {
+      id: '/app/agendamentos'
+      path: '/agendamentos'
+      fullPath: '/app/agendamentos'
+      preLoaderRoute: typeof AppAgendamentosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/assinatura': {
+      id: '/app/assinatura'
+      path: '/assinatura'
+      fullPath: '/app/assinatura'
+      preLoaderRoute: typeof AppAssinaturaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/atendimento': {
+      id: '/app/atendimento'
+      path: '/atendimento'
+      fullPath: '/app/atendimento'
+      preLoaderRoute: typeof AppAtendimentoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/campanhas': {
+      id: '/app/campanhas'
+      path: '/campanhas'
+      fullPath: '/app/campanhas'
+      preLoaderRoute: typeof AppCampanhasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/chatbot': {
+      id: '/app/chatbot'
+      path: '/chatbot'
+      fullPath: '/app/chatbot'
+      preLoaderRoute: typeof AppChatbotRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/clientes': {
+      id: '/app/clientes'
+      path: '/clientes'
+      fullPath: '/app/clientes'
+      preLoaderRoute: typeof AppClientesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/configuracoes': {
+      id: '/app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/app/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/conversas': {
+      id: '/app/conversas'
+      path: '/conversas'
+      fullPath: '/app/conversas'
+      preLoaderRoute: typeof AppConversasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/departamentos': {
+      id: '/app/departamentos'
+      path: '/departamentos'
+      fullPath: '/app/departamentos'
+      preLoaderRoute: typeof AppDepartamentosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/financeiro': {
+      id: '/app/financeiro'
+      path: '/financeiro'
+      fullPath: '/app/financeiro'
+      preLoaderRoute: typeof AppFinanceiroRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notificacoes': {
+      id: '/app/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/app/notificacoes'
+      preLoaderRoute: typeof AppNotificacoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/perfil': {
+      id: '/app/perfil'
+      path: '/perfil'
+      fullPath: '/app/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/relatorios': {
+      id: '/app/relatorios'
+      path: '/relatorios'
+      fullPath: '/app/relatorios'
+      preLoaderRoute: typeof AppRelatoriosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/usuarios': {
+      id: '/app/usuarios'
+      path: '/usuarios'
+      fullPath: '/app/usuarios'
+      preLoaderRoute: typeof AppUsuariosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/whatsapp': {
+      id: '/app/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/app/whatsapp'
+      preLoaderRoute: typeof AppWhatsappRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAgendamentosRoute: typeof AppAgendamentosRoute
+  AppAssinaturaRoute: typeof AppAssinaturaRoute
+  AppAtendimentoRoute: typeof AppAtendimentoRoute
+  AppCampanhasRoute: typeof AppCampanhasRoute
+  AppChatbotRoute: typeof AppChatbotRoute
+  AppClientesRoute: typeof AppClientesRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
+  AppConversasRoute: typeof AppConversasRoute
+  AppDepartamentosRoute: typeof AppDepartamentosRoute
+  AppFinanceiroRoute: typeof AppFinanceiroRoute
+  AppNotificacoesRoute: typeof AppNotificacoesRoute
+  AppPerfilRoute: typeof AppPerfilRoute
+  AppRelatoriosRoute: typeof AppRelatoriosRoute
+  AppUsuariosRoute: typeof AppUsuariosRoute
+  AppWhatsappRoute: typeof AppWhatsappRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAgendamentosRoute: AppAgendamentosRoute,
+  AppAssinaturaRoute: AppAssinaturaRoute,
+  AppAtendimentoRoute: AppAtendimentoRoute,
+  AppCampanhasRoute: AppCampanhasRoute,
+  AppChatbotRoute: AppChatbotRoute,
+  AppClientesRoute: AppClientesRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
+  AppConversasRoute: AppConversasRoute,
+  AppDepartamentosRoute: AppDepartamentosRoute,
+  AppFinanceiroRoute: AppFinanceiroRoute,
+  AppNotificacoesRoute: AppNotificacoesRoute,
+  AppPerfilRoute: AppPerfilRoute,
+  AppRelatoriosRoute: AppRelatoriosRoute,
+  AppUsuariosRoute: AppUsuariosRoute,
+  AppWhatsappRoute: AppWhatsappRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface AuthRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AtendimentoRoute: AtendimentoRoute,
+  AuthRoute: AuthRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
