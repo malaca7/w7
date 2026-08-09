@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { ArrowRight, Sparkles, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 import dashboardHero from "@/assets/dashboard-hero.jpg";
 
 export function Hero() {
@@ -40,12 +41,14 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button variant="brand" size="xl">
-              Começar teste grátis
-              <ArrowRight className="size-4" />
+            <Button variant="brand" size="xl" asChild>
+              <Link to="/auth/register">
+                Começar teste grátis
+                <ArrowRight className="size-4" />
+              </Link>
             </Button>
-            <Button variant="subtle" size="xl">
-              Ver demonstração
+            <Button variant="subtle" size="xl" asChild>
+              <Link to="/auth/login">Ver demonstração</Link>
             </Button>
           </div>
 

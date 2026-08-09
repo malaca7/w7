@@ -45,11 +45,11 @@ export function Nav() {
         </ul>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="ghost" size="sm">
-            Entrar
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/auth/login">Entrar</Link>
           </Button>
-          <Button variant="brand" size="sm">
-            Teste grátis
+          <Button variant="brand" size="sm" asChild>
+            <Link to="/auth/register">Teste grátis</Link>
           </Button>
         </div>
 
@@ -80,8 +80,12 @@ export function Nav() {
             ))}
           </ul>
           <div className="mt-3 grid gap-2">
-            <Button variant="outline">Entrar</Button>
-            <Button variant="brand">Teste grátis</Button>
+            <Button variant="outline" asChild onClick={() => setOpen(false)}>
+              <Link to="/auth/login">Entrar</Link>
+            </Button>
+            <Button variant="brand" asChild onClick={() => setOpen(false)}>
+              <Link to="/auth/register">Teste grátis</Link>
+            </Button>
           </div>
         </div>
       )}

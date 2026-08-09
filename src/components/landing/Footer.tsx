@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 import { Reveal } from "./Reveal";
 import { W7Logo } from "./W7Logo";
 
@@ -24,9 +25,11 @@ export function CTA() {
                 Crie sua empresa na <span className="font-bold text-gradient">W7</span> em menos de dois minutos. Sem cartão, sem instalação.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Button variant="brand" size="xl">
-                  Criar conta grátis
-                  <ArrowRight className="size-4" />
+                <Button variant="brand" size="xl" asChild>
+                  <Link to="/auth/register">
+                    Criar conta grátis
+                    <ArrowRight className="size-4" />
+                  </Link>
                 </Button>
                 <Button variant="subtle" size="xl">
                   Falar com especialista
