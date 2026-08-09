@@ -34,3 +34,7 @@ dist-ssr
 # Scratch files
 scratch/
 
+
+.env
+.env.local
+.env.*.local
