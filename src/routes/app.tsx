@@ -6,7 +6,7 @@ import {
   LayoutDashboard, MessageSquare, MessagesSquare, Users, Smartphone,
   Bot, Calendar, Megaphone, CreditCard, Receipt, UserCog, Building2,
   BarChart3, Bell, Settings, LogOut, ChevronLeft, ChevronRight,
-  Search, Menu, X, UserCircle, Zap,
+  Search, Menu, X, UserCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -130,13 +130,9 @@ function AppLayout() {
     >
       {/* Logo */}
       <div className={cn("flex items-center h-14 border-b border-border/40 shrink-0", collapsed ? "justify-center px-2" : "px-4 gap-3")}>
-        {collapsed ? (
-          <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-            <Zap className="h-4 w-4 text-primary-foreground" />
-          </div>
-        ) : (
+        <Link to="/" aria-label="Ir para a página inicial" className={cn(collapsed ? "[writing-mode:vertical-rl] rotate-180" : "") }>
           <W7Logo className="h-6 w-auto" />
-        )}
+        </Link>
       </div>
 
       {/* Nav */}

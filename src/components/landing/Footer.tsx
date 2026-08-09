@@ -56,7 +56,9 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-5">
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(4,1fr)]">
           <div>
-            <W7Logo showTagline />
+            <Link to="/" className="w-fit" aria-label="Ir para a página inicial">
+              <W7Logo showTagline />
+            </Link>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
               Plataforma SaaS <span className="font-bold text-gradient">W7</span> de atendimento inteligente via WhatsApp para empresas que crescem.
             </p>

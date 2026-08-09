@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "build:pages": "npm run build && node scratch/prepare-gh-pages.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "deploy": "npm i && npm run build && git add . && git commit -m \"Deploy to gh-pages\" && git push origin main && git checkout gh-pages && git pull origin gh-pages --no-rebase && git merge main --no-edit && git push origin gh-pages && git checkout main"
+    "deploy": "npm i && npm run build:pages && npx gh-pages --dotfiles -d dist -b gh-pages"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

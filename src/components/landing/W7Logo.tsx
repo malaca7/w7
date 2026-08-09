@@ -1,23 +1,17 @@
 export function W7Logo({ className, showTagline = false }: { className?: string; showTagline?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className ?? ""}`}>
-      <span
-        aria-hidden
-        className="grid size-9 place-items-center rounded-xl font-black text-xs text-white shadow-[0_0_20px_-4px_rgba(166,255,0,0.45)] transition-transform duration-300 hover:scale-105"
-        style={{
-          background: "linear-gradient(135deg, #A6FF00 0%, #50C800 100%)",
-        }}
-      >
-        <span className="font-black text-xs text-white tracking-tighter drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]">
-          W7
-        </span>
-      </span>
+    <span className={`inline-flex items-center ${className ?? ""}`}>
       <div className="flex flex-col">
-        <span className="text-xl font-extrabold tracking-tight text-gradient drop-shadow-[0_2px_12px_rgba(166,255,0,0.2)]">
-          W7
+        <span className="inline-flex items-end leading-none">
+          <span className="bg-[linear-gradient(135deg,#ecffc2_0%,#cfff72_18%,#a6ff00_42%,#73dd00_72%,#d7ff9a_100%)] bg-clip-text pr-[0.04em] text-[1.45rem] font-black tracking-[-0.08em] text-transparent drop-shadow-[0_12px_34px_rgba(134,255,0,0.22)] sm:text-[1.7rem]">
+            W7
+          </span>
+          <span className="ml-0.5 pb-0.5 text-[0.54rem] font-bold uppercase tracking-[0.04em] text-white/96 sm:text-[0.62rem]">
+            Call
+          </span>
         </span>
         {showTagline && (
-          <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground/80">
             Plataforma SaaS
           </span>
         )}

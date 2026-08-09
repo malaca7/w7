@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
 import { getSession } from "@/lib/auth";
 import { W7Logo } from "@/components/landing/W7Logo";
 
@@ -20,7 +20,9 @@ function AuthLayout() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col h-full p-10">
-          <W7Logo className="h-8 w-auto" />
+          <Link to="/" className="w-fit" aria-label="Ir para a página inicial">
+            <W7Logo className="h-8 w-auto" />
+          </Link>
 
           <div className="mt-auto">
             <blockquote className="space-y-4">
@@ -58,7 +60,9 @@ function AuthLayout() {
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-[400px]">
           <div className="lg:hidden mb-8 flex justify-center">
-            <W7Logo className="h-8 w-auto" />
+            <Link to="/" aria-label="Ir para a página inicial">
+              <W7Logo className="h-8 w-auto" />
+            </Link>
           </div>
           <Outlet />
         </div>
