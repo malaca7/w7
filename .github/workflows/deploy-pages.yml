@@ -35,7 +35,7 @@ jobs:
         run: npm run build
 
       - name: Prepare GitHub Pages artifact
-        run: node scratch/prepare-gh-pages.mjs
+        run: node scripts/prepare-gh-pages.mjs
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
