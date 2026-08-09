@@ -2,13 +2,13 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { signUpWithEmail } from "@/lib/auth";
+import { signUpWithEmail, verifyEmailOtp } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/auth/register")({
   component: RegisterPage,
@@ -26,10 +26,117 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-function RegisterPage() {
+function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
   const navigate = useNavigate();
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [loading, setLoading] = useState(false);
+  const inputs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleChange = (i: number, val: string) => {
+    const digit = val.replace(/\D/g, "").slice(-1);
+    const next = [...code];
+    next[i] = digit;
+    setCode(next);
+    if (digit && i < 5) inputs.current[i + 1]?.focus();
+    if (next.every((d) => d !== "")) handleVerify(next.join(""));
+  };
+
+  const handleKeyDown = (i: number, e: React.KeyboardEvent) => {
+    if (e.key === "Backspace" && !code[i] && i > 0) {
+      inputs.current[i - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setCode(pasted.split(""));
+      handleVerify(pasted);
+    }
+    e.preventDefault();
+  };
+
+  const handleVerify = async (token: string) => {
+    setLoading(true);
+    try {
+      await verifyEmailOtp(email, token);
+      toast.success("E-mail confirmado! Bem-vindo à W7.");
+      navigate({ to: "/app" });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Código inválido";
+      toast.error(msg.includes("expired") ? "Código expirado. Solicite um novo." : "Código inválido ou expirado.");
+      setCode(["", "", "", "", "", ""]);
+      inputs.current[0]?.focus();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <button
+        type="button"
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft className="h-4 w-4" /> Voltar
+      </button>
+
+      <div className="text-center space-y-2">
+        <div className="flex justify-center">
+          <div className="h-14 w-14 rounded-full bg-primary/15 flex items-center justify-center">
+            <Mail className="h-7 w-7 text-primary" />
+          </div>
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Confirme seu e-mail</h2>
+        <p className="text-sm text-muted-foreground">
+          Enviamos um código de 6 dígitos para<br />
+          <span className="font-medium text-foreground">{email}</span>
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex justify-center gap-2" onPaste={handlePaste}>
+          {code.map((digit, i) => (
+            <input
+              key={i}
+              ref={(el) => { inputs.current[i] = el; }}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => handleChange(i, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(i, e)}
+              disabled={loading}
+              className="h-14 w-11 rounded-lg border border-border bg-background text-center text-xl font-bold text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 transition-all"
+            />
+          ))}
+        </div>
+
+        {loading && (
+          <div className="flex justify-center">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          </div>
+        )}
+
+        <p className="text-center text-xs text-muted-foreground">
+          Não recebeu? Verifique a pasta de spam ou{" "}
+          <button
+            type="button"
+            onClick={onBack}
+            className="text-primary hover:underline font-medium"
+          >
+            tente novamente
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function RegisterPage() {
   const [showPw, setShowPw] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -43,32 +150,15 @@ function RegisterPage() {
   const onSubmit = async (data: FormData) => {
     try {
       await signUpWithEmail(data.email, data.password, data.full_name, data.company_name);
-      setSuccess(true);
+      setRegisteredEmail(data.email);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao criar conta";
       toast.error(msg.includes("already registered") ? "Este e-mail já está cadastrado" : msg);
     }
   };
 
-  if (success) {
-    return (
-      <div className="space-y-6 text-center">
-        <div className="flex justify-center">
-          <div className="h-16 w-16 rounded-full bg-primary/15 flex items-center justify-center">
-            <CheckCircle2 className="h-8 w-8 text-primary" />
-          </div>
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-foreground">Verifique seu e-mail</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Enviamos um link de confirmação para o seu e-mail. Clique nele para ativar sua conta e começar a usar a W7.
-          </p>
-        </div>
-        <Link to="/auth/login" className="block">
-          <Button variant="outline" className="w-full">Voltar ao login</Button>
-        </Link>
-      </div>
-    );
+  if (registeredEmail) {
+    return <OtpStep email={registeredEmail} onBack={() => setRegisteredEmail(null)} />;
   }
 
   return (

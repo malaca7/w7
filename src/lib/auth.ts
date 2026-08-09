@@ -14,6 +14,13 @@ export async function signInWithEmail(email: string, password: string) {
   return data;
 }
 
+export async function verifyEmailOtp(email: string, token: string) {
+  const sb = requireSupabase();
+  const { data, error } = await sb.auth.verifyOtp({ email, token, type: "signup" });
+  if (error) throw error;
+  return data;
+}
+
 export async function signUpWithEmail(
   email: string,
   password: string,
@@ -26,7 +33,6 @@ export async function signUpWithEmail(
     password,
     options: {
       data: { full_name: fullName, company_name: companyName },
-      emailRedirectTo: `${window.location.origin}/auth/login`,
     },
   });
   if (error) throw error;
