@@ -21,6 +21,19 @@ export async function verifyEmailOtp(email: string, token: string) {
   return data;
 }
 
+export async function resendSignupOtp(email: string) {
+  const sb = requireSupabase();
+  const { data, error } = await sb.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/login`,
+    },
+  });
+  if (error) throw error;
+  return data;
+}
+
 export async function signUpWithEmail(
   email: string,
   password: string,

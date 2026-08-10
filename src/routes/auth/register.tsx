@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { signUpWithEmail, verifyEmailOtp } from "@/lib/auth";
+import { resendSignupOtp, signUpWithEmail, verifyEmailOtp } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,22 @@ function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
   const navigate = useNavigate();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const mapAuthError = (msg: string) => {
+    const normalized = msg.toLowerCase();
+    if (normalized.includes("rate limit") || normalized.includes("too many requests")) {
+      return "Muitas tentativas. Aguarde 60 segundos para reenviar.";
+    }
+    if (normalized.includes("smtp") || normalized.includes("error sending")) {
+      return "Falha no envio do e-mail. Verifique SMTP no Supabase.";
+    }
+    if (normalized.includes("expired")) {
+      return "Código expirado. Solicite um novo.";
+    }
+    return msg;
+  };
 
   const handleChange = (i: number, val: string) => {
     const digit = val.replace(/\D/g, "").slice(-1);
@@ -64,11 +79,26 @@ function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
       navigate({ to: "/app" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Código inválido";
-      toast.error(msg.includes("expired") ? "Código expirado. Solicite um novo." : "Código inválido ou expirado.");
+      toast.error(msg.includes("expired") ? "Código expirado. Solicite um novo." : mapAuthError("Código inválido ou expirado."));
       setCode(["", "", "", "", "", ""]);
       inputs.current[0]?.focus();
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await resendSignupOtp(email);
+      setCode(["", "", "", "", "", ""]);
+      inputs.current[0]?.focus();
+      toast.success(`Novo código enviado para ${email}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Erro ao reenviar código";
+      toast.error(mapAuthError(msg));
+    } finally {
+      setResending(false);
     }
   };
 
@@ -123,11 +153,16 @@ function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
           Não recebeu? Verifique a pasta de spam ou{" "}
           <button
             type="button"
-            onClick={onBack}
+            onClick={handleResend}
+            disabled={resending}
             className="text-primary hover:underline font-medium"
           >
-            tente novamente
+            {resending ? "reenviando..." : "reenviar código"}
           </button>
+        </p>
+
+        <p className="text-center text-xs text-muted-foreground">
+          Se o problema continuar, confirme as configurações de SMTP no Supabase.
         </p>
       </div>
     </div>
