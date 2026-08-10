@@ -1,6 +1,13 @@
 import { getSupabase, requireSupabase, type Company, type Profile } from "./supabase";
 import type { User } from "@supabase/supabase-js";
 
+export interface RegistrationPayload {
+  email: string;
+  password: string;
+  fullName: string;
+  companyName: string;
+}
+
 export interface AuthUser {
   user: User;
   profile: Profile;
@@ -51,6 +58,39 @@ export async function signUpWithEmail(
   });
   if (error) throw error;
   return data;
+}
+
+async function callActivationCodeApi(payload: RegistrationPayload) {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) {
+    throw new Error("Supabase not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env");
+  }
+
+  const response = await fetch(`${url}/functions/v1/send-activation-code`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${anonKey}`,
+      apikey: anonKey,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const body = (await response.json().catch(() => null)) as { error?: string; message?: string } | null;
+  if (!response.ok) {
+    throw new Error(body?.error ?? "Erro ao enviar código de ativação");
+  }
+
+  return body;
+}
+
+export async function registerWithActivationCode(payload: RegistrationPayload) {
+  return callActivationCodeApi(payload);
+}
+
+export async function resendActivationCode(payload: RegistrationPayload) {
+  return callActivationCodeApi(payload);
 }
 
 export async function signOut() {

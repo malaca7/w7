@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { resendSignupOtp, signUpWithEmail, verifyEmailOtp } from "@/lib/auth";
+import { registerWithActivationCode, resendActivationCode, resendSignupOtp, signUpWithEmail, verifyEmailOtp } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +26,15 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
+function OtpStep({
+  email,
+  registrationData,
+  onBack,
+}: {
+  email: string;
+  registrationData: { password: string; fullName: string; companyName: string };
+  onBack: () => void;
+}) {
   const navigate = useNavigate();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
@@ -90,7 +98,16 @@ function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
   const handleResend = async () => {
     setResending(true);
     try {
-      await resendSignupOtp(email);
+      try {
+        await resendActivationCode({
+          email,
+          password: registrationData.password,
+          fullName: registrationData.fullName,
+          companyName: registrationData.companyName,
+        });
+      } catch {
+        await resendSignupOtp(email);
+      }
       setCode(["", "", "", "", "", ""]);
       inputs.current[0]?.focus();
       toast.success(`Novo código enviado para ${email}`);
@@ -172,6 +189,11 @@ function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
 function RegisterPage() {
   const [showPw, setShowPw] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
+  const [registrationData, setRegistrationData] = useState<{
+    password: string;
+    fullName: string;
+    companyName: string;
+  } | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -184,7 +206,21 @@ function RegisterPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await signUpWithEmail(data.email, data.password, data.full_name, data.company_name);
+      try {
+        await registerWithActivationCode({
+          email: data.email,
+          password: data.password,
+          fullName: data.full_name,
+          companyName: data.company_name,
+        });
+      } catch {
+        await signUpWithEmail(data.email, data.password, data.full_name, data.company_name);
+      }
+      setRegistrationData({
+        password: data.password,
+        fullName: data.full_name,
+        companyName: data.company_name,
+      });
       setRegisteredEmail(data.email);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao criar conta";
@@ -192,8 +228,17 @@ function RegisterPage() {
     }
   };
 
-  if (registeredEmail) {
-    return <OtpStep email={registeredEmail} onBack={() => setRegisteredEmail(null)} />;
+  if (registeredEmail && registrationData) {
+    return (
+      <OtpStep
+        email={registeredEmail}
+        registrationData={registrationData}
+        onBack={() => {
+          setRegisteredEmail(null);
+          setRegistrationData(null);
+        }}
+      />
+    );
   }
 
   return (
