@@ -48,6 +48,31 @@ export async function checkEmailExists(email: string): Promise<boolean> {
   return !!data;
 }
 
+async function callDirectSignup(payload: RegistrationPayload) {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) {
+    throw new Error("Supabase não configurado no .env");
+  }
+
+  const response = await fetch(`${url}/functions/v1/direct-signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${anonKey}`,
+      apikey: anonKey,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const body = (await response.json().catch(() => null)) as { error?: string; user?: any } | null;
+  if (!response.ok) {
+    throw new Error(body?.error ?? "Erro ao realizar cadastro via Edge Function");
+  }
+
+  return body;
+}
+
 export async function signUpWithEmail(
   email: string,
   password: string,
@@ -55,26 +80,49 @@ export async function signUpWithEmail(
   companyName: string,
 ) {
   const sb = requireSupabase();
-  const { data, error } = await sb.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { full_name: fullName, company_name: companyName },
-    },
-  });
-  if (error) throw error;
 
-  // Auto sign in if session was not provided immediately
-  if (!data.session) {
-    const signInRes = await sb.auth.signInWithPassword({ email, password });
-    if (signInRes.error) {
-      // Return signup data even if sign-in had an issue
-      return data;
+  try {
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName, company_name: companyName },
+      },
+    });
+
+    if (error) {
+      if (error.message.toLowerCase().includes("disabled") || error.message.toLowerCase().includes("email signups are disabled")) {
+        await callDirectSignup({ email, password, fullName, companyName });
+        const signInRes = await sb.auth.signInWithPassword({ email, password });
+        if (signInRes.error) throw signInRes.error;
+        return signInRes.data;
+      }
+      throw error;
     }
-    return signInRes.data;
-  }
 
-  return data;
+    if (!data.session) {
+      const signInRes = await sb.auth.signInWithPassword({ email, password });
+      if (signInRes.error) return data;
+      return signInRes.data;
+    }
+
+    return data;
+  } catch (err: any) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.toLowerCase().includes("disabled") || msg.toLowerCase().includes("email signups are disabled")) {
+      try {
+        await callDirectSignup({ email, password, fullName, companyName });
+        const signInRes = await sb.auth.signInWithPassword({ email, password });
+        if (signInRes.error) throw signInRes.error;
+        return signInRes.data;
+      } catch (fallbackErr: any) {
+        throw new Error(
+          "O cadastro por e-mail está desativado no Supabase. Habilite a opção 'Allow new users to sign up' no Supabase Dashboard em Authentication > Providers > Email."
+        );
+      }
+    }
+    throw err;
+  }
 }
 
 async function callActivationCodeApi(payload: RegistrationPayload) {
