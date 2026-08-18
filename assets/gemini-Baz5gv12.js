@@ -1,4 +1,4 @@
-import{y as e}from"./index-0W6WMaJt.js";var t=`AIzaSyDQgkV9ZHmLWHVJz8viIjBrvCfhW_mhs3Y`,n=`https://generativelanguage.googleapis.com/v1beta/models`;function r(e,t){return`Você é um assistente de atendimento ao cliente via WhatsApp.
+import{g as e}from"./index-JJNUwmXY.js";var t=`AIzaSyDQgkV9ZHmLWHVJz8viIjBrvCfhW_mhs3Y`,n=`https://generativelanguage.googleapis.com/v1beta/models`;function r(e,t){return`Você é um assistente de atendimento ao cliente via WhatsApp.
 
 PERSONALIDADE: ${e.personality}
 
