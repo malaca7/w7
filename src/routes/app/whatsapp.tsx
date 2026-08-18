@@ -128,7 +128,10 @@ function WhatsAppPage() {
       setNewName("");
       setNewPhone("");
     },
-    onError: () => toast.error("Erro ao criar conexão"),
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Erro ao criar conexão";
+      toast.error(msg);
+    },
   });
 
   const reconnectMutation = useMutation({
