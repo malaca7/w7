@@ -6,7 +6,7 @@ import {
   LayoutDashboard, MessageSquare, MessagesSquare, Users, Smartphone,
   Bot, Calendar, Megaphone, CreditCard, Receipt, UserCog, Building2,
   BarChart3, Bell, Settings, LogOut, ChevronLeft, ChevronRight,
-  Search, Menu, X, UserCircle,
+  Search, Menu, X, UserCircle, Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -53,6 +53,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
     items: [
       { label: "WhatsApp", to: "/app/whatsapp", icon: Smartphone },
       { label: "Chatbot", to: "/app/chatbot", icon: Bot },
+      { label: "IA Gemini", to: "/app/ia-gemini", icon: Sparkles },
       { label: "Agendamentos", to: "/app/agendamentos", icon: Calendar },
       { label: "Campanhas", to: "/app/campanhas", icon: Megaphone },
     ],

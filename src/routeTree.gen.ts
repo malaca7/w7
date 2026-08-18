@@ -24,6 +24,7 @@ import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes
 import { Route as AppConversasRouteImport } from './routes/app/conversas'
 import { Route as AppDepartamentosRouteImport } from './routes/app/departamentos'
 import { Route as AppFinanceiroRouteImport } from './routes/app/financeiro'
+import { Route as AppIaGeminiRouteImport } from './routes/app/ia-gemini'
 import { Route as AppNotificacoesRouteImport } from './routes/app/notificacoes'
 import { Route as AppPerfilRouteImport } from './routes/app/perfil'
 import { Route as AppRelatoriosRouteImport } from './routes/app/relatorios'
@@ -109,6 +110,11 @@ const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
   path: '/financeiro',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIaGeminiRoute = AppIaGeminiRouteImport.update({
+  id: '/ia-gemini',
+  path: '/ia-gemini',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppNotificacoesRoute = AppNotificacoesRouteImport.update({
   id: '/notificacoes',
   path: '/notificacoes',
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/app/conversas': typeof AppConversasRoute
   '/app/departamentos': typeof AppDepartamentosRoute
   '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/ia-gemini': typeof AppIaGeminiRoute
   '/app/notificacoes': typeof AppNotificacoesRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/relatorios': typeof AppRelatoriosRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/app/conversas': typeof AppConversasRoute
   '/app/departamentos': typeof AppDepartamentosRoute
   '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/ia-gemini': typeof AppIaGeminiRoute
   '/app/notificacoes': typeof AppNotificacoesRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/relatorios': typeof AppRelatoriosRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/app/conversas': typeof AppConversasRoute
   '/app/departamentos': typeof AppDepartamentosRoute
   '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/ia-gemini': typeof AppIaGeminiRoute
   '/app/notificacoes': typeof AppNotificacoesRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/relatorios': typeof AppRelatoriosRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/app/conversas'
     | '/app/departamentos'
     | '/app/financeiro'
+    | '/app/ia-gemini'
     | '/app/notificacoes'
     | '/app/perfil'
     | '/app/relatorios'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/app/conversas'
     | '/app/departamentos'
     | '/app/financeiro'
+    | '/app/ia-gemini'
     | '/app/notificacoes'
     | '/app/perfil'
     | '/app/relatorios'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/app/conversas'
     | '/app/departamentos'
     | '/app/financeiro'
+    | '/app/ia-gemini'
     | '/app/notificacoes'
     | '/app/perfil'
     | '/app/relatorios'
@@ -427,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFinanceiroRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/ia-gemini': {
+      id: '/app/ia-gemini'
+      path: '/ia-gemini'
+      fullPath: '/app/ia-gemini'
+      preLoaderRoute: typeof AppIaGeminiRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/notificacoes': {
       id: '/app/notificacoes'
       path: '/notificacoes'
@@ -504,6 +523,7 @@ interface AppRouteChildren {
   AppConversasRoute: typeof AppConversasRoute
   AppDepartamentosRoute: typeof AppDepartamentosRoute
   AppFinanceiroRoute: typeof AppFinanceiroRoute
+  AppIaGeminiRoute: typeof AppIaGeminiRoute
   AppNotificacoesRoute: typeof AppNotificacoesRoute
   AppPerfilRoute: typeof AppPerfilRoute
   AppRelatoriosRoute: typeof AppRelatoriosRoute
@@ -523,6 +543,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppConversasRoute: AppConversasRoute,
   AppDepartamentosRoute: AppDepartamentosRoute,
   AppFinanceiroRoute: AppFinanceiroRoute,
+  AppIaGeminiRoute: AppIaGeminiRoute,
   AppNotificacoesRoute: AppNotificacoesRoute,
   AppPerfilRoute: AppPerfilRoute,
   AppRelatoriosRoute: AppRelatoriosRoute,

@@ -1,64 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
-import { getSupabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import {
-  MessageSquare, Users, Smartphone, TrendingUp, TrendingDown,
-  Clock, CheckCircle2, AlertCircle, ArrowUpRight,
+  MessageSquare, Users, Smartphone, TrendingUp,
+  Clock, CheckCircle2, ArrowUpRight, Send, Inbox,
+  Sparkles, Wifi, UserCheck,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { fetchDashboardStats, fetchConversations, fetchConnections } from "@/lib/whatsapp-db";
+import { fetchAIUsageStats } from "@/lib/gemini";
 
 export const Route = createFileRoute("/app/")({
   component: DashboardPage,
 });
-
-function useStats(companyId: string | undefined) {
-  return useQuery({
-    queryKey: ["dashboard-stats", companyId],
-    enabled: !!companyId,
-    queryFn: async () => {
-      const sb = getSupabase();
-      if (!sb || !companyId) return null;
-
-      const [convRes, contactRes, openRes, pendRes] = await Promise.all([
-        sb.from("conversations").select("id", { count: "exact", head: true }).eq("company_id", companyId),
-        sb.from("contacts").select("id", { count: "exact", head: true }).eq("company_id", companyId),
-        sb.from("conversations").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "open"),
-        sb.from("conversations").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "pending"),
-      ]);
-
-      return {
-        conversations: convRes.count ?? 0,
-        contacts: contactRes.count ?? 0,
-        open: openRes.count ?? 0,
-        pending: pendRes.count ?? 0,
-      };
-    },
-    refetchInterval: 60_000,
-  });
-}
-
-function useRecentConversations(companyId: string | undefined) {
-  return useQuery({
-    queryKey: ["recent-conversations", companyId],
-    enabled: !!companyId,
-    queryFn: async () => {
-      const sb = getSupabase();
-      if (!sb || !companyId) return [];
-      const { data } = await sb
-        .from("conversations")
-        .select("id, status, channel, last_message, last_message_at, unread_count, contacts(name, avatar_url)")
-        .eq("company_id", companyId)
-        .order("last_message_at", { ascending: false })
-        .limit(8);
-      return data ?? [];
-    },
-  });
-}
 
 interface StatCardProps {
   title: string;
@@ -71,27 +29,25 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon: Icon, trend, description, accent = "text-primary" }: StatCardProps) {
   return (
-    <Card className="bg-card border-border/50 hover:border-border transition-colors">
+    <Card className="bg-card border-border/50 hover:border-border/80 transition-all duration-200 group">
       <CardContent className="p-5">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">{title}</p>
-            <p className="text-3xl font-bold text-foreground">{value}</p>
-            {description && <p className="text-xs text-muted-foreground">{description}</p>}
+            <p className="text-xs text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold text-foreground">{value}</p>
+            {description && <p className="text-[10px] text-muted-foreground">{description}</p>}
           </div>
-          <div className={cn("p-2.5 rounded-xl bg-primary/10", accent)}>
+          <div className={cn("p-2.5 rounded-xl bg-primary/5 group-hover:bg-primary/10 transition-colors", accent)}>
             <Icon className="h-5 w-5" />
           </div>
         </div>
         {trend != null && (
           <div className="mt-3 flex items-center gap-1 text-xs">
-            {trend >= 0
-              ? <TrendingUp className="h-3 w-3 text-primary" />
-              : <TrendingDown className="h-3 w-3 text-destructive" />}
+            <TrendingUp className={cn("h-3 w-3", trend >= 0 ? "text-primary" : "text-destructive")} />
             <span className={trend >= 0 ? "text-primary" : "text-destructive"}>
               {Math.abs(trend)}%
             </span>
-            <span className="text-muted-foreground">vs. mês passado</span>
+            <span className="text-muted-foreground">vs. semana passada</span>
           </div>
         )}
       </CardContent>
@@ -99,14 +55,8 @@ function StatCard({ title, value, icon: Icon, trend, description, accent = "text
   );
 }
 
-const statusConfig: Record<string, { label: string; color: string; icon: React.ComponentType<{ className?: string }> }> = {
-  open: { label: "Aberta", color: "text-primary bg-primary/10", icon: MessageSquare },
-  pending: { label: "Pendente", color: "text-yellow-500 bg-yellow-500/10", icon: Clock },
-  resolved: { label: "Resolvida", color: "text-green-500 bg-green-500/10", icon: CheckCircle2 },
-  archived: { label: "Arquivada", color: "text-muted-foreground bg-muted/40", icon: AlertCircle },
-};
-
-function timeAgo(date: string) {
+function timeAgo(date: string | null) {
+  if (!date) return "";
   const diff = Date.now() - new Date(date).getTime();
   const m = Math.floor(diff / 60000);
   if (m < 1) return "agora";
@@ -116,11 +66,41 @@ function timeAgo(date: string) {
   return `${Math.floor(h / 24)}d`;
 }
 
+const statusConfig: Record<string, { label: string; color: string }> = {
+  open: { label: "Aberta", color: "text-primary bg-primary/10" },
+  pending: { label: "Pendente", color: "text-yellow-500 bg-yellow-500/10" },
+  resolved: { label: "Resolvida", color: "text-green-500 bg-green-500/10" },
+  archived: { label: "Arquivada", color: "text-muted-foreground bg-muted/40" },
+};
+
 function DashboardPage() {
   const { authUser } = useAuth();
   const companyId = authUser?.company.id;
-  const { data: stats } = useStats(companyId);
-  const { data: conversations = [] } = useRecentConversations(companyId);
+
+  const { data: stats } = useQuery({
+    queryKey: ["dashboard-stats", companyId],
+    enabled: !!companyId,
+    queryFn: () => fetchDashboardStats(companyId!),
+    refetchInterval: 30_000,
+  });
+
+  const { data: conversations = [] } = useQuery({
+    queryKey: ["dashboard-convs", companyId],
+    enabled: !!companyId,
+    queryFn: () => fetchConversations(companyId!, { limit: 8 }),
+  });
+
+  const { data: connections = [] } = useQuery({
+    queryKey: ["connections", companyId],
+    enabled: !!companyId,
+    queryFn: () => fetchConnections(companyId!),
+  });
+
+  const { data: aiStats } = useQuery({
+    queryKey: ["ai-usage-stats", companyId],
+    enabled: !!companyId,
+    queryFn: () => fetchAIUsageStats(companyId!),
+  });
 
   const plan = authUser?.company.plan ?? "trial";
   const trialEnd = authUser?.company.trial_ends_at;
@@ -153,13 +133,12 @@ function DashboardPage() {
         )}
       </div>
 
-      {/* Stats */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Conversas abertas"
           value={stats?.open ?? "—"}
-          icon={MessageSquare}
-          trend={12}
+          icon={Inbox}
         />
         <StatCard
           title="Pendentes"
@@ -168,17 +147,45 @@ function DashboardPage() {
           accent="text-yellow-500"
         />
         <StatCard
+          title="Resolvidas"
+          value={stats?.resolved ?? "—"}
+          icon={CheckCircle2}
+          accent="text-green-500"
+        />
+        <StatCard
           title="Contatos"
           value={stats?.contacts ?? "—"}
           icon={Users}
-          trend={5}
           accent="text-blue-400"
         />
+      </div>
+
+      {/* Secondary Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          title="Total conversas"
-          value={stats?.conversations ?? "—"}
-          icon={Smartphone}
-          accent="text-purple-400"
+          title="Msgs enviadas hoje"
+          value={stats?.sentToday ?? 0}
+          icon={Send}
+          accent="text-emerald-400"
+        />
+        <StatCard
+          title="Msgs recebidas hoje"
+          value={stats?.receivedToday ?? 0}
+          icon={MessageSquare}
+          accent="text-violet-400"
+        />
+        <StatCard
+          title="Atendentes online"
+          value={stats?.onlineAgents ?? 0}
+          icon={UserCheck}
+          accent="text-cyan-400"
+        />
+        <StatCard
+          title="Uso IA hoje"
+          value={stats?.aiUsageToday ?? 0}
+          icon={Sparkles}
+          description={`${((aiStats?.totalTokens ?? 0) / 1000).toFixed(1)}k tokens total`}
+          accent="text-amber-400"
         />
       </div>
 
@@ -189,7 +196,7 @@ function DashboardPage() {
           <Card className="bg-card border-border/50">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <CardTitle className="text-base font-semibold">Conversas recentes</CardTitle>
-              <Link to="/app/conversas">
+              <Link to="/app/atendimento">
                 <Button variant="ghost" size="sm" className="gap-1 text-xs text-muted-foreground">
                   Ver todas <ArrowUpRight className="h-3 w-3" />
                 </Button>
@@ -252,8 +259,45 @@ function DashboardPage() {
           </Card>
         </div>
 
-        {/* Quick actions + plan info */}
+        {/* Right sidebar */}
         <div className="space-y-4">
+          {/* Connections */}
+          <Card className="bg-card border-border/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <Wifi className="h-4 w-4 text-[#25D366]" />
+                Conexões WhatsApp
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {connections.length === 0 ? (
+                <div className="text-center py-4">
+                  <p className="text-xs text-muted-foreground mb-3">Nenhuma conexão ativa</p>
+                  <Link to="/app/whatsapp">
+                    <Button size="sm" variant="outline" className="text-xs">Conectar</Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {connections.map((conn) => (
+                    <div key={conn.id} className="flex items-center gap-2.5 rounded-lg bg-accent/30 p-2.5">
+                      <span className={cn(
+                        "h-2 w-2 rounded-full shrink-0",
+                        conn.status === "online" ? "bg-green-500" : conn.status === "connecting" ? "bg-yellow-500 animate-pulse" : "bg-red-500",
+                      )} />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-medium truncate">{conn.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{conn.phone_number ?? conn.mode}</p>
+                      </div>
+                      <Badge variant="outline" className="text-[10px] capitalize">{conn.status}</Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick actions */}
           <Card className="bg-card border-border/50">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Ações rápidas</CardTitle>
@@ -262,16 +306,12 @@ function DashboardPage() {
               {[
                 { label: "Nova conversa", to: "/app/atendimento", icon: MessageSquare },
                 { label: "Adicionar contato", to: "/app/clientes", icon: Users },
-                { label: "Nova campanha", to: "/app/campanhas", icon: "📣" },
                 { label: "Conectar WhatsApp", to: "/app/whatsapp", icon: Smartphone },
+                { label: "Configurar IA", to: "/app/ia-gemini", icon: Sparkles },
               ].map((action) => (
                 <Link key={action.to} to={action.to}>
                   <Button variant="outline" className="w-full justify-start gap-3 h-9 text-sm font-normal border-border/50 hover:border-primary/30 hover:bg-primary/5">
-                    {typeof action.icon === "string" ? (
-                      <span>{action.icon}</span>
-                    ) : (
-                      <action.icon className="h-4 w-4 text-muted-foreground" />
-                    )}
+                    <action.icon className="h-4 w-4 text-muted-foreground" />
                     {action.label}
                   </Button>
                 </Link>
@@ -279,6 +319,7 @@ function DashboardPage() {
             </CardContent>
           </Card>
 
+          {/* Plan */}
           <Card className="bg-card border-border/50">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Plano atual</CardTitle>
@@ -299,15 +340,15 @@ function DashboardPage() {
               <div className="space-y-2 text-xs text-muted-foreground">
                 <div className="flex justify-between">
                   <span>Conexões WhatsApp</span>
-                  <span className="text-foreground font-medium">1 / 3</span>
+                  <span className="text-foreground font-medium">{connections.length} / {plan === "enterprise" ? "∞" : "3"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Atendentes</span>
-                  <span className="text-foreground font-medium">2 / 5</span>
+                  <span>Mensagens enviadas</span>
+                  <span className="text-foreground font-medium">{stats?.sentToday ?? 0} hoje</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Mensagens/mês</span>
-                  <span className="text-foreground font-medium">1.2k / 5k</span>
+                  <span>IA interações</span>
+                  <span className="text-foreground font-medium">{aiStats?.totalInteractions ?? 0}</span>
                 </div>
               </div>
             </CardContent>
