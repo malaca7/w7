@@ -42,10 +42,14 @@ export async function resendSignupOtp(email: string) {
 }
 
 export async function checkEmailExists(email: string): Promise<boolean> {
-  const sb = getSupabase();
-  if (!sb) return false;
-  const { data } = await sb.from("profiles").select("id").eq("email", email).maybeSingle();
-  return !!data;
+  try {
+    const sb = getSupabase();
+    if (!sb) return false;
+    const { data } = await sb.from("profiles").select("id").eq("email", email).maybeSingle();
+    return !!data;
+  } catch {
+    return false;
+  }
 }
 
 async function callDirectSignup(payload: RegistrationPayload) {
@@ -91,35 +95,35 @@ export async function signUpWithEmail(
     });
 
     if (error) {
-      if (error.message.toLowerCase().includes("disabled") || error.message.toLowerCase().includes("email signups are disabled")) {
-        await callDirectSignup({ email, password, fullName, companyName });
-        const signInRes = await sb.auth.signInWithPassword({ email, password });
-        if (signInRes.error) throw signInRes.error;
-        return signInRes.data;
+      const msg = error.message.toLowerCase();
+      if (msg.includes("disabled") || msg.includes("email signups are disabled")) {
+        try {
+          await callDirectSignup({ email, password, fullName, companyName });
+          const signInRes = await sb.auth.signInWithPassword({ email, password });
+          if (signInRes.data?.session) return signInRes.data;
+        } catch {
+          // If edge function is not deployed or fails
+          throw new Error(
+            "O cadastro por e-mail está desativado no Supabase. Para permitir cadastros, vá ao Supabase Dashboard > Authentication > Providers > Email e ative 'Allow new users to sign up'."
+          );
+        }
       }
       throw error;
     }
 
     if (!data.session) {
       const signInRes = await sb.auth.signInWithPassword({ email, password });
-      if (signInRes.error) return data;
-      return signInRes.data;
+      if (signInRes.data?.session) return signInRes.data;
+      return data;
     }
 
     return data;
   } catch (err: any) {
-    const msg = err instanceof Error ? err.message : String(err);
-    if (msg.toLowerCase().includes("disabled") || msg.toLowerCase().includes("email signups are disabled")) {
-      try {
-        await callDirectSignup({ email, password, fullName, companyName });
-        const signInRes = await sb.auth.signInWithPassword({ email, password });
-        if (signInRes.error) throw signInRes.error;
-        return signInRes.data;
-      } catch (fallbackErr: any) {
-        throw new Error(
-          "O cadastro por e-mail está desativado no Supabase. Habilite a opção 'Allow new users to sign up' no Supabase Dashboard em Authentication > Providers > Email."
-        );
-      }
+    const msg = (err instanceof Error ? err.message : String(err)).toLowerCase();
+    if (msg.includes("disabled") || msg.includes("email signups are disabled") || msg.includes("failed to fetch")) {
+      throw new Error(
+        "O cadastro por e-mail está desativado no seu Supabase. Para habilitar, acesse o Supabase Dashboard em Authentication > Providers > Email e ative 'Allow new users to sign up'."
+      );
     }
     throw err;
   }
