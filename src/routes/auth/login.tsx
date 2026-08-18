@@ -15,8 +15,8 @@ export const Route = createFileRoute("/auth/login")({
 });
 
 const schema = z.object({
-  email: z.string().email("E-mail inválido"),
-  password: z.string().min(6, "Mínimo 6 caracteres"),
+  email: z.string().email("Digite um e-mail válido"),
+  password: z.string().min(1, "Digite sua senha"),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -31,10 +31,15 @@ function LoginPage() {
   const onSubmit = async (data: FormData) => {
     try {
       await signInWithEmail(data.email, data.password);
+      toast.success("Login efetuado com sucesso!");
       navigate({ to: "/app" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao fazer login";
-      toast.error(msg === "Invalid login credentials" ? "E-mail ou senha incorretos" : msg);
+      if (msg.includes("Invalid login credentials") || msg.includes("invalid_credentials")) {
+        toast.error("E-mail ou senha incorretos");
+      } else {
+        toast.error(msg);
+      }
     }
   };
 

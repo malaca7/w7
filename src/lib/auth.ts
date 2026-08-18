@@ -41,6 +41,13 @@ export async function resendSignupOtp(email: string) {
   return data;
 }
 
+export async function checkEmailExists(email: string): Promise<boolean> {
+  const sb = getSupabase();
+  if (!sb) return false;
+  const { data } = await sb.from("profiles").select("id").eq("email", email).maybeSingle();
+  return !!data;
+}
+
 export async function signUpWithEmail(
   email: string,
   password: string,
@@ -53,10 +60,20 @@ export async function signUpWithEmail(
     password,
     options: {
       data: { full_name: fullName, company_name: companyName },
-      emailRedirectTo: `${window.location.origin}/auth/login`,
     },
   });
   if (error) throw error;
+
+  // Auto sign in if session was not provided immediately
+  if (!data.session) {
+    const signInRes = await sb.auth.signInWithPassword({ email, password });
+    if (signInRes.error) {
+      // Return signup data even if sign-in had an issue
+      return data;
+    }
+    return signInRes.data;
+  }
+
   return data;
 }
 
